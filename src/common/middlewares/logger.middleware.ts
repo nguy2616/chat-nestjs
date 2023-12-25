@@ -2,7 +2,7 @@ import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 
 @Injectable()
-class LoggerMiddleware implements NestMiddleware {
+export class LoggerMiddleware implements NestMiddleware {
   private readonly logger = new Logger('HTTP');
 
   use(request: Request, response: Response, next: NextFunction) {
@@ -16,7 +16,7 @@ class LoggerMiddleware implements NestMiddleware {
       Object.entries(request.query).length &&
         (requestParramaters.query = request.query);
       Object.entries(requestParramaters).length &&
-        this.logger.log(JSON.stringify(requestParramaters));
+        this.logger.debug(JSON.stringify(requestParramaters));
       const message = `${method} ${originalUrl} ${statusCode} ${statusMessage} ${
         Date.now() - startTime
       }ms`;
@@ -29,5 +29,3 @@ class LoggerMiddleware implements NestMiddleware {
     next();
   }
 }
-
-export default LoggerMiddleware;

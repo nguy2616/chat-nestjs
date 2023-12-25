@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { SWAGGER_PATH, VERSION } from 'src/common/constants/constants';
+import { SWAGGER_PATH, VERSION } from 'src/environment';
 
 export const swaggerConfig = async (app: INestApplication) => {
   const options = new DocumentBuilder()
