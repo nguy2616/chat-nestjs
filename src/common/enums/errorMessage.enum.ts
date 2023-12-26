@@ -1,3 +1,5 @@
 export enum ErrorMsgEnum {
   NOT_FOUND = 'NOT_FOUND',
+  EXISTED = 'EMAIL_EXISTED',
+  INVALID_PASSWORD = 'INVALID_CREDENTIALS',
 }
