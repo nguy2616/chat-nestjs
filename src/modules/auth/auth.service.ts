@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ErrorMsgEnum } from 'src/common/enums/errorMessage.enum';
 import { JWT_EXPIRATION_TIME } from 'src/environment';
@@ -22,6 +26,7 @@ export class AuthService {
   async validateUser(dto: LoginDto) {
     try {
       const user = await this.userService.getByEmail(dto.email);
+      if (!user) throw new NotFoundException(ErrorMsgEnum.NOT_FOUND);
       const isMatch = await comparePassword(dto.password, user.password);
       if (!isMatch)
         throw new BadRequestException(ErrorMsgEnum.INVALID_PASSWORD);

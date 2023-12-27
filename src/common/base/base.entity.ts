@@ -18,11 +18,11 @@ export abstract class BaseAbstractEntity {
   })
   updatedAt: Date;
 
-  @Column({ name: 'created_by', nullable: true, type: 'varchar' })
-  createdBy: string;
+  @Column({ name: 'created_by', nullable: true })
+  createdBy: number;
 
-  @Column({ name: 'updated_by', nullable: true, type: 'varchar' })
-  updatedBy: string;
+  @Column({ name: 'updated_by', nullable: true })
+  updatedBy: number;
 
   @Column({
     name: 'deleted_at',

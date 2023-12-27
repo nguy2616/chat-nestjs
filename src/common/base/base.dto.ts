@@ -20,12 +20,12 @@ export class BaseDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
-  createdBy: string;
+  createdBy: number;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
-  updatedBy: string;
+  updatedBy: number;
 
   @ApiPropertyOptional()
   @IsOptional()
