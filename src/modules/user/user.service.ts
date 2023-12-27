@@ -81,12 +81,10 @@ export class UserService implements BaseAbstractService<UserEntity> {
     throw new Error('Method not implemented.');
   }
 
-  async getByEmail(email: string): Promise<UserEntity> {
+  async getByEmail(email: string) {
     const data = await this.repository.findOne({
       where: { email },
     });
-
-    if (!data) throw new NotFoundException(ErrorMsgEnum.NOT_FOUND);
-    return data;
+    if (data) return data;
   }
 }

@@ -1,5 +1,6 @@
 import { BaseAbstractEntity } from 'src/common/base/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { MessageEntity } from 'src/modules/message/entities/message.entity';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { RoleEntity } from './role.entity';
 
 @Entity('users')
@@ -22,4 +23,7 @@ export class UserEntity extends BaseAbstractEntity {
   @ManyToOne(() => RoleEntity, (roles) => roles.user)
   @JoinColumn({ name: 'role_id' })
   role: RoleEntity;
+
+  @OneToMany(() => MessageEntity, (messages) => messages.author)
+  messages: MessageEntity[];
 }
