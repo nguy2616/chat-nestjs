@@ -9,6 +9,7 @@ import { AllExceptionsFilter } from './common/exceptions/all-exception.filter';
 import { TransformInterceptor } from './common/interceptor/transform.interceptor';
 import { swaggerConfig } from './config/swagger.config';
 import { API_PREFIX, PORT } from './environment';
+import { WsAdapter } from './modules/gateway/ws.adapter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
   app.use(cors({ credentials: true, origin: true }));
@@ -26,6 +27,10 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor());
   app.setGlobalPrefix(API_PREFIX);
   app.use(passport.initialize());
+
+  const adapter = new WsAdapter(app);
+  app.useWebSocketAdapter(adapter);
+
   await swaggerConfig(app);
   await app.listen(+PORT);
 }

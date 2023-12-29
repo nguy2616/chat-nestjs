@@ -5,15 +5,18 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
+    const { stack } = exception;
+    let { message } = exception;
+    Logger.error(JSON.stringify({ message, stack }));
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     let status: number;
-    let message: string;
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
