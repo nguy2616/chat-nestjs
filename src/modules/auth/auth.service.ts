@@ -1,9 +1,13 @@
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   BadRequestException,
+  Inject,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Cache } from 'cache-manager';
 import { ErrorMsgEnum } from 'src/common/enums/errorMessage.enum';
 import { JWT_EXPIRATION_TIME } from 'src/environment';
 import { CreateUserDto } from '../user/dto/createUser.dto';
@@ -17,6 +21,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private jwtService: JwtService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async register(dto: CreateUserDto) {
@@ -37,8 +42,17 @@ export class AuthService {
   }
 
   async getCookieWithJwtToken(user: UserEntity) {
-    const payload: TokenPayload = { id: user.id, roleId: user.roleId };
-    const token = this.jwtService.sign(payload);
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${JWT_EXPIRATION_TIME}`;
+    try {
+      const payload: TokenPayload = { id: user.id, roleId: user.roleId };
+      const token = this.jwtService.sign(payload);
+      // await this.cacheManager.set(
+      //   `user-${user.id.toString()}`,
+      //   token,
+      //   TimeInMsEnum.ONE_DAY,
+      // );
+      return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${JWT_EXPIRATION_TIME}`;
+    } catch (error) {
+      Logger.error(error);
+    }
   }
 }

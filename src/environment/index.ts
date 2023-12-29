@@ -12,3 +12,4 @@ export const DB_PASSWORD = process.env.DB_PASSWORD || 'postgres';
 export const DB_NAME = process.env.DB_NAME || 'postgres';
 export const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 export const JWT_EXPIRATION_TIME = process.env.JWT_EXPIRATION_TIME || '1d';
+export const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';

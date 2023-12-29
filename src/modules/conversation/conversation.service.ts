@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorMsgEnum } from 'src/common/enums/errorMessage.enum';
 import { TPaginationResult } from 'src/common/types/paginationResult.type';
@@ -21,6 +22,7 @@ export class ConversationService {
     private readonly userService: UserService,
     @InjectRepository(ConversationEntity)
     private readonly repository: Repository<ConversationEntity>,
+    private eventEmitter: EventEmitter2,
   ) {}
   async getList(
     query: QueryConversationDto,
@@ -80,6 +82,7 @@ export class ConversationService {
           },
         ],
       });
+      this.eventEmitter.emit('conversation.create', conversation);
       return conversation;
     } catch (error) {
       throw new BadRequestException(error?.message ?? error);
