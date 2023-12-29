@@ -34,6 +34,7 @@ export class AuthController {
   ) {
     const { user } = req;
     const cookie = await this.service.getCookieWithJwtToken(user);
+
     res.setHeader('Set-Cookie', cookie);
     return res.send(user);
   }

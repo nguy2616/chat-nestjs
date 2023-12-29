@@ -47,6 +47,7 @@ export class MessageService {
         ...dto,
       });
       const msg = await this.getById(data.id);
+
       this.eventEmitter.emit(MessageEnum.CREATE, msg);
       return msg;
     } catch (error) {

@@ -9,6 +9,7 @@ import { ErrorMsgEnum } from 'src/common/enums/errorMessage.enum';
 import { TPaginationResult } from 'src/common/types/paginationResult.type';
 import { mutateQuery } from 'src/common/utils/mutateQuery';
 import { Repository } from 'typeorm';
+import { MailService } from '../mail/mail.service';
 import { UserService } from '../user/user.service';
 import { CreateConversationDto } from './dto/create-conversation.dto';
 import { QueryConversationDto } from './dto/queryConversation.dto';
@@ -23,6 +24,7 @@ export class ConversationService {
     @InjectRepository(ConversationEntity)
     private readonly repository: Repository<ConversationEntity>,
     private eventEmitter: EventEmitter2,
+    private readonly mailService: MailService,
   ) {}
   async getList(
     query: QueryConversationDto,
@@ -57,6 +59,7 @@ export class ConversationService {
         messages: true,
       },
     });
+
     if (!data) throw new NotFoundException(ErrorMsgEnum.NOT_FOUND);
     return data;
   }

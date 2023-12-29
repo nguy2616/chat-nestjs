@@ -30,6 +30,7 @@ async function bootstrap() {
 
   const adapter = new WsAdapter(app);
   app.useWebSocketAdapter(adapter);
+
   await swaggerConfig(app);
   await app.listen(+PORT);
 }

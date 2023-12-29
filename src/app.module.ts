@@ -35,8 +35,10 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(CreatedByMiddleware)
+      .exclude({ path: 'auth/(.*)', method: RequestMethod.POST })
       .forRoutes({ path: '*', method: RequestMethod.POST })
       .apply(UpdatedByMiddleware)
+      .exclude({ path: 'auth/(.*)', method: RequestMethod.POST })
       .forRoutes({ path: '*', method: RequestMethod.PUT })
       .apply(LoggerMiddleware)
       .forRoutes('*');

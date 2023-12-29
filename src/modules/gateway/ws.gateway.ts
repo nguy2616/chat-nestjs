@@ -16,7 +16,11 @@ import { ConversationService } from '../conversation/conversation.service';
 import { ConversationEntity } from '../conversation/entities/conversation.entity';
 import { MessageEntity } from '../message/entities/message.entity';
 import { MessageService } from '../message/message.service';
-import { MessageEnum, OnListenEnum } from './enums/message.enum';
+import {
+  ConversationEnum,
+  MessageEnum,
+  OnListenEnum,
+} from './enums/message.enum';
 import { WsSessionManager } from './ws.session';
 @WebSocketGateway(8000, {
   cors: {
@@ -37,6 +41,7 @@ export class WsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   handleConnection(client: ISocketUser) {
     this.sessions.setSession(client.user.id, client);
+
     Logger.debug(`Client connected: ${client.user.id}`);
   }
 
@@ -54,18 +59,21 @@ export class WsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @OnEvent(MessageEnum.CREATE)
   handleCreateMessage(
     @MessageBody() data: MessageEntity,
-    @ConnectedSocket() client: ISocketUser,
+    // @ConnectedSocket() client: ISocketUser,
   ) {
+    const client = this.sessions.getSession(data.authorId);
+    if (client) client.emit(OnListenEnum.MESSAGE, data);
+
     const recipentId =
-      client.user.id === data.conversation.creatorId
+      data.authorId === data.conversation.creatorId
         ? data.conversation.recipentId
         : data.conversation.creatorId;
     const recipentSocket = this.sessions.getSession(recipentId);
+
     if (recipentSocket) recipentSocket.emit(OnListenEnum.MESSAGE, data);
-    client.emit(OnListenEnum.MESSAGE, data);
   }
 
-  @OnEvent(MessageEnum.CREATE)
+  @OnEvent(ConversationEnum.CREATE)
   handleCreateConversation(
     @MessageBody() data: ConversationEntity,
     @ConnectedSocket() client: ISocketUser,

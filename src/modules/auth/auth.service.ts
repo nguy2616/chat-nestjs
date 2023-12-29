@@ -9,6 +9,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Cache } from 'cache-manager';
 import { ErrorMsgEnum } from 'src/common/enums/errorMessage.enum';
+import { TimeInMsEnum } from 'src/common/enums/time.enum';
 import { JWT_EXPIRATION_TIME } from 'src/environment';
 import { CreateUserDto } from '../user/dto/createUser.dto';
 import { UserEntity } from '../user/entities/user.entity';
@@ -45,11 +46,11 @@ export class AuthService {
     try {
       const payload: TokenPayload = { id: user.id, roleId: user.roleId };
       const token = this.jwtService.sign(payload);
-      // await this.cacheManager.set(
-      //   `user-${user.id.toString()}`,
-      //   token,
-      //   TimeInMsEnum.ONE_DAY,
-      // );
+      await this.cacheManager.set(
+        `user-${user.id.toString()}`,
+        token,
+        TimeInMsEnum.ONE_DAY,
+      );
       return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${JWT_EXPIRATION_TIME}`;
     } catch (error) {
       Logger.error(error);
