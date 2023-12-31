@@ -1,21 +1,19 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 export abstract class BaseAbstractEntity {
   @PrimaryGeneratedColumn('increment', { name: 'id' })
   id: number;
 
-  @Column({
-    name: 'created_at',
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @Column({
-    name: 'updated_at',
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
   @Column({ name: 'created_by', nullable: true })
@@ -24,11 +22,7 @@ export abstract class BaseAbstractEntity {
   @Column({ name: 'updated_by', nullable: true })
   updatedBy: number;
 
-  @Column({
-    name: 'deleted_at',
-    nullable: true,
-    type: 'timestamp',
-  })
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date;
 
   @Column({ name: 'status', nullable: false, type: 'boolean', default: true })

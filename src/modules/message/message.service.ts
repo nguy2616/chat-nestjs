@@ -3,7 +3,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorMsgEnum } from 'src/common/enums/errorMessage.enum';
 import { TPaginationResult } from 'src/common/types/paginationResult.type';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { ConversationService } from '../conversation/conversation.service';
 import { MessageEnum } from '../gateway/enums/message.enum';
 import { CreateMessageDto } from './dto/createMessage.dto';
@@ -17,6 +17,7 @@ export class MessageService {
     private readonly repository: Repository<MessageEntity>,
     private readonly conversationService: ConversationService,
     private eventEmitter: EventEmitter2,
+    private readonly entityManager: EntityManager,
   ) {}
   getList(query: any): Promise<TPaginationResult<MessageEntity>> {
     throw new Error('Method not implemented.');
@@ -64,9 +65,19 @@ export class MessageService {
 
   async delete(id: number) {
     const message = await this.getById(id);
-    await this.repository.softDelete(id);
-    this.eventEmitter.emit(MessageEnum.DELETE, message);
-    return message;
+    await this.entityManager.transaction(async (trx) => {
+      await Promise.all([
+        trx.softDelete(MessageEntity, id),
+        trx.update(MessageEntity, id, { status: false }),
+      ]);
+    });
+    const deletedMsg = await this.repository.findOne({
+      where: { id },
+      withDeleted: true,
+      relations: ['conversation'],
+    });
+    this.eventEmitter.emit(MessageEnum.DELETE, deletedMsg);
+    return deletedMsg;
   }
 
   async getListByConversationId(conversationId: number) {
