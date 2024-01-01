@@ -11,7 +11,7 @@ export class UserEntity extends BaseAbstractEntity {
   @Column({ name: 'last_name', nullable: false, type: 'varchar' })
   lastName: string;
 
-  @Column({ name: 'email', nullable: false, type: 'varchar' })
+  @Column({ name: 'email', nullable: false, type: 'varchar', unique: true })
   email: string;
 
   @Column({ name: 'password', nullable: false, type: 'varchar' })

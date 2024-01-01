@@ -73,6 +73,41 @@ export class WsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (recipentSocket) recipentSocket.emit(OnListenEnum.MESSAGE, data);
   }
 
+  @OnEvent(MessageEnum.UPDATE)
+  handleUpdateMessage(
+    @MessageBody() data: MessageEntity,
+    // @ConnectedSocket() client: ISocketUser,
+  ) {
+    const client = this.sessions.getSession(data.authorId);
+    if (client) client.emit(OnListenEnum.MESSAGE, data);
+
+    const recipentId =
+      data.authorId === data.conversation.creatorId
+        ? data.conversation.recipentId
+        : data.conversation.creatorId;
+    const recipentSocket = this.sessions.getSession(recipentId);
+
+    if (recipentSocket) recipentSocket.emit(OnListenEnum.MESSAGE, data);
+  }
+
+  @OnEvent(MessageEnum.DELETE)
+  handleDeleteMessage(
+    @MessageBody() data: MessageEntity,
+    // @ConnectedSocket() client: ISocketUser,
+  ) {
+    const client = this.sessions.getSession(data.authorId);
+    if (client) client.emit(OnListenEnum.MESSAGE, data);
+
+    const recipentId =
+      data.authorId === data.conversation.creatorId
+        ? data.conversation.recipentId
+        : data.conversation.creatorId;
+    const recipentSocket = this.sessions.getSession(recipentId);
+
+    if (recipentSocket) recipentSocket.emit(OnListenEnum.MESSAGE, data);
+  }
+
+  // CONVERSATION EVENT
   @OnEvent(ConversationEnum.CREATE)
   handleCreateConversation(
     @MessageBody() data: ConversationEntity,

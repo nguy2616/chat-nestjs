@@ -14,12 +14,14 @@ import { ConversationModule } from './modules/conversation/conversation.module';
 import { WsModule } from './modules/gateway/ws.module';
 import { MessageModule } from './modules/message/message.module';
 import { RedisModule } from './modules/redis/redis.module';
+import { SeedModule } from './modules/seed/seed.module';
 import { UserModule } from './modules/user/user.module';
 
 const modules = [
   TypeOrmModule.forRoot(dataSourceOptions),
   EventEmitterModule.forRoot(),
   RedisModule,
+  SeedModule,
   WsModule,
   UserModule,
   AuthModule,
