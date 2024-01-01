@@ -3,4 +3,6 @@ export enum ControllerEnum {
   AUTH = 'auth',
   CONVERSATION = 'conversations',
   MESSAGE = 'messages',
+  CATEGORY = 'categories',
+  MENU = 'menus',
 }

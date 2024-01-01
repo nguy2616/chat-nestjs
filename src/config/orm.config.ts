@@ -10,7 +10,18 @@ import { MessageEntity } from 'src/modules/message/entities/message.entity';
 import { RoleEntity } from 'src/modules/user/entities/role.entity';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { DataSource, DataSourceOptions } from 'typeorm';
-const entities = [ConversationEntity, MessageEntity, RoleEntity, UserEntity];
+import { CategoryEntity } from '../modules/category/entities/category.entity';
+import { MenuEntity } from '../modules/menu/entities/menu.entity';
+import { MenuCategoryEntity } from '../modules/menu/entities/menuCategories.entity';
+const entities = [
+  ConversationEntity,
+  MessageEntity,
+  RoleEntity,
+  UserEntity,
+  CategoryEntity,
+  MenuEntity,
+  MenuCategoryEntity,
+];
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
   host: DB_HOST,
@@ -21,7 +32,7 @@ export const dataSourceOptions: DataSourceOptions = {
   entities,
   // entities: ['dist/modules/*/*/*.entity{.ts,.js}'],
   migrations: ['dist/migrations/*{.ts,.js}'],
-  migrationsRun: true,
+  migrationsRun: false,
 };
 
 export const dataSource = new DataSource(dataSourceOptions);

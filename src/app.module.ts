@@ -16,6 +16,8 @@ import { MessageModule } from './modules/message/message.module';
 import { RedisModule } from './modules/redis/redis.module';
 import { SeedModule } from './modules/seed/seed.module';
 import { UserModule } from './modules/user/user.module';
+import { CategoryModule } from './modules/category/cateogry.module';
+import { MenuModule } from './modules/menu/menu.module';
 
 const modules = [
   TypeOrmModule.forRoot(dataSourceOptions),
@@ -27,6 +29,8 @@ const modules = [
   AuthModule,
   ConversationModule,
   MessageModule,
+  CategoryModule,
+  MenuModule,
 ];
 @Module({
   imports: [...modules],

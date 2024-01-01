@@ -31,7 +31,7 @@ export class MailService {
   onModuleInit() {
     this.transporter.verify((error, success) => {
       if (error) {
-        Logger.error(error);
+        Logger.error('Mail error:', error);
       } else {
         Logger.log('Mail server is ready to take our messages');
       }
