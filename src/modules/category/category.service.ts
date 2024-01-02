@@ -6,14 +6,14 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { CategoryEntity } from './entities/category.entity';
 import { BaseAbstractService } from '../../common/base/base.service';
-import { TPaginationResult } from '../../common/types/paginationResult.type';
-import { CreateCategoryDto } from './dto/createCategory.dto';
-import { UpdateCategoryDto } from './dto/updateCategory';
 import { ErrorMsgEnum } from '../../common/enums/errorMessage.enum';
-import { QueryCategoryDto } from './dto/queryCategory.dto';
+import { TPaginationResult } from '../../common/types/paginationResult.type';
 import { mutateQuery } from '../../common/utils/mutateQuery';
+import { CreateCategoryDto } from './dto/createCategory.dto';
+import { QueryCategoryDto } from './dto/queryCategory.dto';
+import { UpdateCategoryDto } from './dto/updateCategory';
+import { CategoryEntity } from './entities/category.entity';
 
 @Injectable()
 export class CategoryService implements BaseAbstractService<CategoryEntity> {

@@ -13,8 +13,8 @@ export class CardEntity extends BaseAbstractEntity {
   })
   expireYear: number;
 
-  @Column({ name: 'cvc', nullable: false, select: false })
-  cvc: number;
+  @Column({ name: 'cvv', nullable: false })
+  cvv: string;
 
   @Column({
     name: 'cardNumber',

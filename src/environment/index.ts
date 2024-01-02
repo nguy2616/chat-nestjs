@@ -18,3 +18,5 @@ export const MAIL_PORT = process.env.MAIL_PORT || '587';
 export const MAIL_ADDRESS = process.env.MAIL_ADDRESS;
 export const MAIL_PASSWORD = process.env.MAIL_PASSWORD;
 export const MAIL_FROM = process.env.MAIL_FROM;
+export const KEY = process.env.KEY || 'key';
+export const IV = process.env.IV || 'iv';

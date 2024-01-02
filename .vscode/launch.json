@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug NestJS",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/src/main.ts", // adjust your main file path
+      "preLaunchTask": "tsc: build - tsconfig.json", // optional: compiles TS before debugging
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+    }
+  ]
+}
