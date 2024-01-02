@@ -16,8 +16,10 @@ import { MessageModule } from './modules/message/message.module';
 import { RedisModule } from './modules/redis/redis.module';
 import { SeedModule } from './modules/seed/seed.module';
 import { UserModule } from './modules/user/user.module';
-import { CategoryModule } from './modules/category/cateogry.module';
+import { CategoryModule } from './modules/category/category.module';
 import { MenuModule } from './modules/menu/menu.module';
+import { BankModule } from './modules/bank/bank.module';
+import { CardModule } from './modules/card/card.module';
 
 const modules = [
   TypeOrmModule.forRoot(dataSourceOptions),
@@ -31,6 +33,8 @@ const modules = [
   MessageModule,
   CategoryModule,
   MenuModule,
+  BankModule,
+  CardModule,
 ];
 @Module({
   imports: [...modules],

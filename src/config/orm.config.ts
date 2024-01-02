@@ -13,6 +13,8 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { CategoryEntity } from '../modules/category/entities/category.entity';
 import { MenuEntity } from '../modules/menu/entities/menu.entity';
 import { MenuCategoryEntity } from '../modules/menu/entities/menuCategories.entity';
+import { BankEntity } from '../modules/bank/entities/bank.entity';
+import { CardEntity } from '../modules/card/entities/card.entity';
 const entities = [
   ConversationEntity,
   MessageEntity,
@@ -21,6 +23,8 @@ const entities = [
   CategoryEntity,
   MenuEntity,
   MenuCategoryEntity,
+  BankEntity,
+  CardEntity,
 ];
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
