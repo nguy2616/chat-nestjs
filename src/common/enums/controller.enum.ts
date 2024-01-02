@@ -5,4 +5,6 @@ export enum ControllerEnum {
   MESSAGE = 'messages',
   CATEGORY = 'categories',
   MENU = 'menus',
+  BANK = 'banks',
+  CARD = 'cards',
 }

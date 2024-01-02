@@ -2,6 +2,8 @@ import { BaseAbstractEntity } from 'src/common/base/base.entity';
 import { MessageEntity } from 'src/modules/message/entities/message.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { RoleEntity } from './role.entity';
+import { BankEntity } from '../../bank/entities/bank.entity';
+import { CardEntity } from '../../card/entities/card.entity';
 
 @Entity('users')
 export class UserEntity extends BaseAbstractEntity {
@@ -26,4 +28,14 @@ export class UserEntity extends BaseAbstractEntity {
 
   @OneToMany(() => MessageEntity, (messages) => messages.author)
   messages: MessageEntity[];
+
+  @OneToMany(() => BankEntity, (banks) => banks.user, {
+    cascade: true,
+  })
+  banks: BankEntity[];
+
+  @OneToMany(() => CardEntity, (cards) => cards.user, {
+    cascade: true,
+  })
+  cards: CardEntity[];
 }
