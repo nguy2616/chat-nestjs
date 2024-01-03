@@ -1,14 +1,14 @@
 import {
   IsNotEmpty,
   IsNumber,
-  IsOptional,
+  IsNumberString,
   IsString,
   Max,
+  MaxLength,
   Min,
   MinLength,
 } from 'class-validator';
 import { BaseDto } from '../../../common/base/base.dto';
-import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateCardDto extends BaseDto {
   @IsNotEmpty()
@@ -23,9 +23,9 @@ export class CreateCardDto extends BaseDto {
   expireYear: number;
 
   @IsNotEmpty()
-  @IsNumber()
-  @Min(100)
-  @Max(999)
+  @IsNumberString()
+  @MinLength(3)
+  @MaxLength(3)
   cvv: string;
 
   @IsNotEmpty()
