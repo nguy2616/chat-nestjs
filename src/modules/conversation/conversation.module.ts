@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MailService } from '../mail/mail.service';
 import { UserModule } from '../user/user.module';
 import { ConversationController } from './conversation.controller';
 import { ConversationService } from './conversation.service';
@@ -9,7 +8,7 @@ import { ConversationEntity } from './entities/conversation.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([ConversationEntity]), UserModule],
   controllers: [ConversationController],
-  providers: [ConversationService, MailService],
+  providers: [ConversationService],
   exports: [ConversationService],
 })
 export class ConversationModule {}
