@@ -11,7 +11,7 @@ import {
   mockedCategory,
   mockedDeleteCategory,
   mockedListCategories,
-} from './mockData.data';
+} from './category.mock';
 describe('CategoryController', () => {
   let app: INestApplication;
   const service = mockService;

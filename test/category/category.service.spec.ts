@@ -12,7 +12,7 @@ import {
   mockedDeleteCategory,
   mockedListCategories,
   mockedQuery,
-} from './mockData.data';
+} from './category.mock';
 
 describe('CategoryService', () => {
   let repository: Repository<CategoryEntity>;

@@ -59,20 +59,20 @@ export class CategoryService implements BaseAbstractService<CategoryEntity> {
     dto: UpdateCategoryDto,
     em?: EntityManager | undefined,
   ): Promise<CategoryEntity> {
-    const category = await this.getById(dto.id);
+    const data = await this.getById(dto.id);
     if (dto?.name) {
       const existed = await this.getByName(dto.name);
       if (existed) throw new BadRequestException(ErrorMsgEnum.EXISTED);
     }
-    return await this.repository.save({ ...category, ...dto });
+    return await this.repository.save({ ...data, ...dto });
   }
   async delete(id: number): Promise<any> {
     try {
-      const category = await this.getById(id);
+      const deletedData = await this.getById(id);
       return await this.entityManger.transaction(async (trx) => {
         await Promise.all([
           trx.softDelete(CategoryEntity, id),
-          trx.update(CategoryEntity, category.id, { status: false }),
+          trx.update(CategoryEntity, deletedData.id, { status: false }),
         ]);
       });
     } catch (error) {
@@ -81,7 +81,7 @@ export class CategoryService implements BaseAbstractService<CategoryEntity> {
   }
 
   async getByName(name: string) {
-    const category = await this.repository.findOne({ where: { name } });
-    if (category) return category;
+    const data = await this.repository.findOne({ where: { name } });
+    if (data) return data;
   }
 }

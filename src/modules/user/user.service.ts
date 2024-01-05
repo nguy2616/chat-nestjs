@@ -20,28 +20,26 @@ export class UserService implements BaseAbstractService<UserEntity> {
   constructor(
     @InjectRepository(UserEntity)
     private readonly repository: Repository<UserEntity>,
+    private readonly entityManger: EntityManager,
   ) {}
   async getList(query: QueryUserDto): Promise<TPaginationResult<UserEntity>> {
     const { limit, skip, sortBy, sortOrder, conditions } = mutateQuery(query);
-    try {
-      const data = await this.repository.findAndCount({
-        where: { ...conditions },
-        skip,
-        take: limit,
-        order: {
-          [sortBy]: sortOrder,
-        },
-      });
-      return {
-        data: data[0],
-        totalItems: data[1],
-        perPage: limit,
-        page: query.page,
-        totalPages: Math.ceil(data[1] / limit),
-      };
-    } catch (error: any) {
-      throw new BadRequestException(JSON.stringify(error?.message ?? error));
-    }
+
+    const data = await this.repository.findAndCount({
+      where: { ...conditions },
+      skip,
+      take: limit,
+      order: {
+        [sortBy]: sortOrder,
+      },
+    });
+    return {
+      data: data[0],
+      totalItems: data[1],
+      perPage: limit,
+      page: query.page,
+      totalPages: Math.ceil(data[1] / limit),
+    };
   }
   async getById(id: number): Promise<UserEntity> {
     const data = await this.repository.findOne({
@@ -70,15 +68,28 @@ export class UserService implements BaseAbstractService<UserEntity> {
   ): Promise<UserEntity> {
     try {
       const data = await this.getById(dto.id);
-      if (!data) throw new NotFoundException(ErrorMsgEnum.NOT_FOUND);
+      // if (dto?.email) {
+      //   const existed = await this.getByEmail(dto.email);
+      //   if (existed) throw new BadRequestException(ErrorMsgEnum.EXISTED);
+      // }
       if (dto?.password) dto.password = await hashPassword(dto.password);
       return await this.repository.save(Object.assign({ ...data, ...dto }));
     } catch (error) {
       throw new BadRequestException(JSON.stringify(error?.message ?? error));
     }
   }
-  delete(id: number): Promise<any> {
-    throw new Error('Method not implemented.');
+  async delete(id: number): Promise<any> {
+    try {
+      const deletedData = await this.getById(id);
+      return await this.entityManger.transaction(async (trx) => {
+        await Promise.all([
+          trx.softDelete(UserEntity, id),
+          trx.update(UserEntity, deletedData.id, { status: false }),
+        ]);
+      });
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   async getByEmail(email: string) {

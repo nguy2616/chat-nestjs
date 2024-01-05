@@ -20,3 +20,4 @@ export const MAIL_PASSWORD = process.env.MAIL_PASSWORD;
 export const MAIL_FROM = process.env.MAIL_FROM;
 export const KEY = process.env.KEY || 'key';
 export const IV = process.env.IV || 'iv';
+export const APP_URL = process.env.APP_URL || 'http://localhost:3000';
