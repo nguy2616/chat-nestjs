@@ -9,8 +9,8 @@ export const mockedListCategories = {
   data: [
     {
       id: 1,
-      createdAt: '2024-01-02T02:23:05.796Z',
-      updatedAt: '2024-01-02T02:23:05.796Z',
+      createdAt: new Date('2024-01-02T02:23:05.796Z'),
+      updatedAt: new Date('2024-01-02T02:23:05.796Z'),
       createdBy: 1,
       updatedBy: 1,
       deletedAt: null,
@@ -38,13 +38,34 @@ export const mockedListCategories = {
 export const mockedCategory = {
   data: {
     id: 1,
-    createdAt: '2024-01-02T02:23:05.796Z',
-    updatedAt: '2024-01-02T02:23:05.796Z',
+    createdAt: new Date('2024-01-02T02:23:05.796Z'),
+    updatedAt: new Date('2024-01-02T02:23:05.796Z'),
     createdBy: 1,
     updatedBy: 1,
     deletedAt: null,
     status: true,
     name: 'Fast food',
     description: 'ff',
+    menus: null,
   },
+};
+
+export const mockedDeleteCategory = {
+  data: {
+    id: 1,
+    createdAt: new Date('2024-01-02T02:23:05.796Z'),
+    updatedAt: new Date('2024-01-02T02:23:05.796Z'),
+    createdBy: 1,
+    updatedBy: 1,
+    deletedAt: new Date('2024-01-02T02:23:05.796Z'),
+    status: false,
+    name: 'Fast food',
+    description: 'ff',
+    menus: null,
+  },
+};
+
+export const mockCreateCategoryDto = {
+  name: 'Fast food',
+  description: 'ff',
 };

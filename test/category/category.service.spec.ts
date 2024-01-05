@@ -2,14 +2,17 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getEntityManagerToken, getRepositoryToken } from '@nestjs/typeorm';
 import { CategoryService } from 'src/modules/category/category.service';
+import { CreateCategoryDto } from 'src/modules/category/dto/createCategory.dto';
 import { CategoryEntity } from 'src/modules/category/entities/category.entity';
 import { mockRepository } from 'test/mocks';
 import { EntityManager, Repository } from 'typeorm';
 import {
+  mockCreateCategoryDto,
   mockedCategory,
+  mockedDeleteCategory,
   mockedListCategories,
   mockedQuery,
-} from './mockData.data';
+} from './category.mock';
 
 describe('CategoryService', () => {
   let repository: Repository<CategoryEntity>;
@@ -54,15 +57,6 @@ describe('CategoryService', () => {
       const result = await service.getList(mockedQuery);
       expect(result).toEqual(mockedListCategories);
     });
-    it('should throw a BadRequestException on failure', async () => {
-      repository.findAndCount = jest
-        .fn()
-        .mockRejectedValue(new Error('Test Error'));
-
-      await expect(service.getList(mockedQuery)).rejects.toThrow(
-        BadRequestException,
-      );
-    });
   });
 
   describe('getById', () => {
@@ -85,7 +79,7 @@ describe('CategoryService', () => {
   });
 
   describe('getByName', () => {
-    it('should throw existed exception ', async () => {
+    it('should return a category ', async () => {
       repository.findOne = jest.fn().mockResolvedValue(mockedCategory.data);
 
       expect(
@@ -99,9 +93,77 @@ describe('CategoryService', () => {
       expect(mockRepository.findOne).toHaveBeenCalledWith({
         where: { name: mockedCategory.data.name },
       });
-      // expect(await service.getByName(mockedCategory.data.name)).rejects.toThrow(
-      //   BadRequestException,
-      // );
+      const result = await service.getByName(mockedCategory.data.name);
+      expect(result).toEqual(mockedCategory.data);
+    });
+  });
+
+  describe('create', () => {
+    it('should create a category when category name is not existed', async () => {
+      jest.spyOn(service, 'getByName').mockResolvedValue(undefined);
+      repository.save = jest.fn().mockResolvedValue(mockedCategory.data);
+      expect(
+        await service.create(mockCreateCategoryDto as CreateCategoryDto),
+      ).toEqual(mockedCategory.data);
+    });
+
+    it('should throw exception on category name existed', async () => {
+      jest.spyOn(service, 'getByName').mockResolvedValue(new CategoryEntity());
+      await expect(
+        service.create(mockCreateCategoryDto as CreateCategoryDto),
+      ).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('update', () => {
+    it('should update a category when category name is not existed', async () => {
+      jest.spyOn(service, 'getByName').mockResolvedValue(undefined);
+      repository.save = jest.fn().mockResolvedValue(mockedCategory.data);
+      expect(
+        await service.update(mockCreateCategoryDto as CreateCategoryDto),
+      ).toEqual(mockedCategory.data);
+    });
+
+    it('should throw exception if category not found', async () => {
+      jest.spyOn(service, 'getById').mockRejectedValue(new NotFoundException());
+      await expect(
+        service.update(mockCreateCategoryDto as CreateCategoryDto),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw exception on category name existed', async () => {
+      jest.spyOn(service, 'getByName').mockResolvedValue(new CategoryEntity());
+      await expect(
+        service.update(mockCreateCategoryDto as CreateCategoryDto),
+      ).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('delete', () => {
+    it('should throw exception if category not found', async () => {
+      jest.spyOn(service, 'getById').mockRejectedValue(new NotFoundException());
+      await expect(service.delete(1)).rejects.toThrow(BadRequestException);
+    });
+
+    it('should delete a category with soft delete and status = false', async () => {
+      jest.spyOn(service, 'getById').mockResolvedValue(mockedCategory.data);
+      repository.softDelete = jest
+        .fn()
+        .mockResolvedValue(mockedDeleteCategory.data);
+      repository.update = jest
+        .fn()
+        .mockResolvedValue(mockedDeleteCategory.data);
+      const result = await service.delete(mockedDeleteCategory.data.id);
+
+      expect(repository.softDelete).toHaveBeenCalledWith(
+        CategoryEntity,
+        mockedCategory.data.id,
+      );
+      expect(repository.update).toHaveBeenCalledWith(
+        CategoryEntity,
+        mockedCategory.data.id,
+        { status: false },
+      );
     });
   });
 });

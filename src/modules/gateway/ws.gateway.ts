@@ -12,6 +12,7 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { ISocketUser } from 'src/common/types/socketUser.interface';
+import { APP_URL } from 'src/environment';
 import { ConversationService } from '../conversation/conversation.service';
 import { ConversationEntity } from '../conversation/entities/conversation.entity';
 import { MessageEntity } from '../message/entities/message.entity';
@@ -24,7 +25,7 @@ import {
 import { WsSessionManager } from './ws.session';
 @WebSocketGateway(8000, {
   cors: {
-    origin: '*',
+    origin: APP_URL,
     credentials: true,
   },
   pingInterval: 10000,

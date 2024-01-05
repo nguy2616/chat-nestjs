@@ -23,7 +23,7 @@ export abstract class BaseAbstractEntity {
   updatedBy: number;
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
-  deletedAt: Date;
+  deletedAt: Date | null;
 
   @Column({ name: 'status', nullable: false, type: 'boolean', default: true })
   status: boolean;
