@@ -12,5 +12,5 @@ export class CategoryEntity extends BaseAbstractEntity {
 
   @ManyToMany(() => MenuEntity, (menus) => menus.categories)
   @JoinTable({ name: 'menus_categories' })
-  menus: MenuEntity[];
+  menus: MenuEntity[] | null;
 }

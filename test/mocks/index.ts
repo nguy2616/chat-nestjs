@@ -17,3 +17,11 @@ export const mockRepository = {
   getMany: jest.fn(),
   transaction: (callback: any) => callback(mockRepository),
 };
+
+export const mockService = {
+  getList: jest.fn(),
+  create: jest.fn(),
+  update: jest.fn(),
+  delete: jest.fn(),
+  getById: jest.fn(),
+};

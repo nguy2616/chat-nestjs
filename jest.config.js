@@ -5,7 +5,10 @@ module.exports = {
   moduleDirectories: ['node_modules', '<rootDir>'],
   preset: 'ts-jest',
   coverageReporters: ['html', 'text', 'text-summary', 'cobertura'],
-  collectCoverageFrom: ['**/src/modules/**/*.service.ts'],
+  collectCoverageFrom: [
+    '**/src/modules/**/*.service.ts',
+    '**/src/modules/**/*.controller.ts',
+  ],
   coveragePathIgnorePatterns: [
     '<rootDir>/dist/',
     // 'src/modules/http',

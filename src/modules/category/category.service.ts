@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -26,25 +25,22 @@ export class CategoryService implements BaseAbstractService<CategoryEntity> {
     query: QueryCategoryDto,
   ): Promise<TPaginationResult<CategoryEntity>> {
     const { limit, skip, sortBy, sortOrder, conditions } = mutateQuery(query);
-    try {
-      const data = await this.repository.findAndCount({
-        where: { ...conditions },
-        skip,
-        take: limit,
-        order: {
-          [sortBy]: sortOrder,
-        },
-      });
-      return {
-        data: data[0],
-        totalItems: data[1],
-        perPage: limit,
-        page: query.page,
-        totalPages: Math.ceil(data[1] / limit),
-      };
-    } catch (error: any) {
-      throw new BadRequestException(JSON.stringify(error?.message ?? error));
-    }
+
+    const data = await this.repository.findAndCount({
+      where: { ...conditions },
+      skip,
+      take: limit,
+      order: {
+        [sortBy]: sortOrder,
+      },
+    });
+    return {
+      data: data[0],
+      totalItems: data[1],
+      perPage: limit,
+      page: query.page,
+      totalPages: Math.ceil(data[1] / limit),
+    };
   }
   async getById(id: number): Promise<CategoryEntity> {
     const data = await this.repository.findOne({ where: { id } });
@@ -55,19 +51,19 @@ export class CategoryService implements BaseAbstractService<CategoryEntity> {
     dto: CreateCategoryDto,
     em?: EntityManager | undefined,
   ): Promise<CategoryEntity> {
-    try {
-      await this.getByName(dto.name);
-      return await this.repository.save(dto);
-    } catch (error) {
-      Logger.error(error);
-      throw new BadRequestException(error);
-    }
+    const existed = await this.getByName(dto.name);
+    if (existed) throw new BadRequestException(ErrorMsgEnum.EXISTED);
+    return await this.repository.save(dto);
   }
   async update(
     dto: UpdateCategoryDto,
     em?: EntityManager | undefined,
   ): Promise<CategoryEntity> {
     const category = await this.getById(dto.id);
+    if (dto?.name) {
+      const existed = await this.getByName(dto.name);
+      if (existed) throw new BadRequestException(ErrorMsgEnum.EXISTED);
+    }
     return await this.repository.save({ ...category, ...dto });
   }
   async delete(id: number): Promise<any> {
@@ -86,6 +82,6 @@ export class CategoryService implements BaseAbstractService<CategoryEntity> {
 
   async getByName(name: string) {
     const category = await this.repository.findOne({ where: { name } });
-    if (category) throw new BadRequestException(ErrorMsgEnum.EXISTED);
+    if (category) return category;
   }
 }
