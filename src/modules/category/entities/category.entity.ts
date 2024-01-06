@@ -1,6 +1,7 @@
-import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { BaseAbstractEntity } from '../../../common/base/base.entity';
 import { MenuEntity } from '../../menu/entities/menu.entity';
+import { MenuCategoryEntity } from '../../menu/entities/menuCategories.entity';
 
 @Entity('categories')
 export class CategoryEntity extends BaseAbstractEntity {
@@ -10,7 +11,8 @@ export class CategoryEntity extends BaseAbstractEntity {
   @Column({ type: 'varchar', nullable: true })
   description: string;
 
-  @ManyToMany(() => MenuEntity, (menus) => menus.categories)
-  @JoinTable({ name: 'menus_categories' })
-  menus: MenuEntity[] | null;
+  @OneToMany(() => MenuCategoryEntity, (menus) => menus.category, {
+    cascade: true,
+  })
+  menus: MenuCategoryEntity[] | null;
 }

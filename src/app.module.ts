@@ -20,6 +20,7 @@ import { CategoryModule } from './modules/category/category.module';
 import { MenuModule } from './modules/menu/menu.module';
 import { BankModule } from './modules/bank/bank.module';
 import { CardModule } from './modules/card/card.module';
+import { ScheduleModule } from './modules/schedule/schedule.module';
 
 const modules = [
   TypeOrmModule.forRoot(dataSourceOptions),
@@ -35,6 +36,7 @@ const modules = [
   MenuModule,
   BankModule,
   CardModule,
+  ScheduleModule,
 ];
 @Module({
   imports: [...modules],

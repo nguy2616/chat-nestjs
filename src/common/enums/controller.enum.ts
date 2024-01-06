@@ -7,4 +7,5 @@ export enum ControllerEnum {
   MENU = 'menus',
   BANK = 'banks',
   CARD = 'cards',
+  SCHEDULE = 'schedules',
 }
