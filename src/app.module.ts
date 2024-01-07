@@ -21,6 +21,7 @@ import { MenuModule } from './modules/menu/menu.module';
 import { BankModule } from './modules/bank/bank.module';
 import { CardModule } from './modules/card/card.module';
 import { ScheduleModule } from './modules/schedule/schedule.module';
+import { BookingModule } from './modules/booking/booking.module';
 
 const modules = [
   TypeOrmModule.forRoot(dataSourceOptions),
@@ -37,6 +38,7 @@ const modules = [
   BankModule,
   CardModule,
   ScheduleModule,
+  BookingModule,
 ];
 @Module({
   imports: [...modules],

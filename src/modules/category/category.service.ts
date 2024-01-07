@@ -19,7 +19,7 @@ export class CategoryService implements BaseAbstractService<CategoryEntity> {
   constructor(
     @InjectRepository(CategoryEntity)
     private readonly repository: Repository<CategoryEntity>,
-    private readonly entityManger: EntityManager,
+    private readonly entityManager: EntityManager,
   ) {}
   async getList(
     query: QueryCategoryDto,
@@ -69,7 +69,7 @@ export class CategoryService implements BaseAbstractService<CategoryEntity> {
   async delete(id: number): Promise<any> {
     try {
       const deletedData = await this.getById(id);
-      return await this.entityManger.transaction(async (trx) => {
+      return await this.entityManager.transaction(async (trx) => {
         await Promise.all([
           trx.softDelete(CategoryEntity, id),
           trx.update(CategoryEntity, deletedData.id, { status: false }),

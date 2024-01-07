@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { BaseAbstractService } from '../../common/base/base.service';
 import { ScheduleEntity } from './entities/schedule.entity';
 import { EntityManager, Repository } from 'typeorm';
@@ -8,6 +12,9 @@ import { CreateScheduleDto } from './dto/createSchedule.dto';
 import { UserService } from '../user/user.service';
 import { RoleEnum } from '../../common/enums/role.enum';
 import { ErrorMsgEnum } from '../../common/enums/errorMessage.enum';
+import { QueryScheduleDto } from './dto/querySchedule.dto';
+import { mutateQuery } from '../../common/utils/mutateQuery';
+import { UpdateScheduleDto } from './dto/updateSchedule.dto';
 
 @Injectable()
 export class ScheduleService implements BaseAbstractService<ScheduleEntity> {
@@ -15,12 +22,33 @@ export class ScheduleService implements BaseAbstractService<ScheduleEntity> {
     @InjectRepository(ScheduleEntity)
     private readonly repository: Repository<ScheduleEntity>,
     private readonly userSerivce: UserService,
+    private readonly entityManager: EntityManager,
   ) {}
-  getList(query: any): Promise<TPaginationResult<ScheduleEntity>> {
-    throw new Error('Method not implemented.');
+  async getList(
+    query: QueryScheduleDto,
+  ): Promise<TPaginationResult<ScheduleEntity>> {
+    const { limit, skip, sortBy, sortOrder, conditions } = mutateQuery(query);
+
+    const data = await this.repository.findAndCount({
+      where: { ...conditions },
+      skip,
+      take: limit,
+      order: {
+        [sortBy]: sortOrder,
+      },
+    });
+    return {
+      data: data[0],
+      totalItems: data[1],
+      perPage: limit,
+      page: query.page,
+      totalPages: Math.ceil(data[1] / limit),
+    };
   }
-  getById(id: number): Promise<ScheduleEntity> | null {
-    throw new Error('Method not implemented.');
+  async getById(id: number): Promise<ScheduleEntity> {
+    const data = await this.repository.findOne({ where: { id } });
+    if (!data) throw new NotFoundException(ErrorMsgEnum.NOT_FOUND);
+    return data;
   }
   async create(dto: CreateScheduleDto): Promise<ScheduleEntity> {
     try {
@@ -34,11 +62,27 @@ export class ScheduleService implements BaseAbstractService<ScheduleEntity> {
       throw new BadRequestException(error.message);
     }
   }
-  update(dto: any, em?: EntityManager | undefined): Promise<ScheduleEntity> {
-    throw new Error('Method not implemented.');
+  async update(
+    dto: UpdateScheduleDto,
+    em?: EntityManager | undefined,
+  ): Promise<ScheduleEntity> {
+    const data = await this.getById(dto.id);
+    if (dto?.openHour && dto?.closeHour)
+      ScheduleService.validateOpenCloseHour(dto?.openHour, dto?.closeHour);
+    return await this.repository.save(dto);
   }
-  delete(id: number): Promise<any> {
-    throw new Error('Method not implemented.');
+  async delete(id: number): Promise<any> {
+    try {
+      const deletedData = await this.getById(id);
+      return await this.entityManager.transaction(async (trx) => {
+        await Promise.all([
+          trx.softDelete(ScheduleEntity, id),
+          trx.update(ScheduleEntity, deletedData.id, { status: false }),
+        ]);
+      });
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   static validateOpenCloseHour(openHour: string, closeHour: string): boolean {

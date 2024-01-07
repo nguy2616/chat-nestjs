@@ -7,8 +7,8 @@ import { UpdateScheduleDto } from './modules/schedule/dto/updateSchedule.dto';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post('/health-check')
-  getHello(@Body() dto: UpdateScheduleDto): string {
+  @Get('/health-check')
+  getHello(): string {
     return this.appService.getHello();
   }
 }

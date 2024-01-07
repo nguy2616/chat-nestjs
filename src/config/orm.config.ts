@@ -16,6 +16,8 @@ import { MenuCategoryEntity } from '../modules/menu/entities/menuCategories.enti
 import { BankEntity } from '../modules/bank/entities/bank.entity';
 import { CardEntity } from '../modules/card/entities/card.entity';
 import { ScheduleEntity } from '../modules/schedule/entities/schedule.entity';
+import { BookingEntity } from '../modules/booking/entities/booking.entity';
+import { BookingMenuEntity } from '../modules/booking/entities/bookingMenu.entity';
 const entities = [
   ConversationEntity,
   MessageEntity,
@@ -27,6 +29,8 @@ const entities = [
   BankEntity,
   CardEntity,
   ScheduleEntity,
+  BookingEntity,
+  BookingMenuEntity,
 ];
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',

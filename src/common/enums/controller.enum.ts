@@ -8,4 +8,5 @@ export enum ControllerEnum {
   BANK = 'banks',
   CARD = 'cards',
   SCHEDULE = 'schedules',
+  BOOKING = 'bookings',
 }
