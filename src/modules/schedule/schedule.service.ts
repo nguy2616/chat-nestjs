@@ -3,18 +3,18 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { BaseAbstractService } from '../../common/base/base.service';
-import { ScheduleEntity } from './entities/schedule.entity';
-import { EntityManager, Repository } from 'typeorm';
-import { TPaginationResult } from '../../common/types/paginationResult.type';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateScheduleDto } from './dto/createSchedule.dto';
-import { UserService } from '../user/user.service';
-import { RoleEnum } from '../../common/enums/role.enum';
+import { EntityManager, Repository } from 'typeorm';
+import { BaseAbstractService } from '../../common/base/base.service';
 import { ErrorMsgEnum } from '../../common/enums/errorMessage.enum';
-import { QueryScheduleDto } from './dto/querySchedule.dto';
+import { RoleEnum } from '../../common/enums/role.enum';
+import { TPaginationResult } from '../../common/types/paginationResult.type';
 import { mutateQuery } from '../../common/utils/mutateQuery';
+import { UserService } from '../user/user.service';
+import { CreateScheduleDto } from './dto/createSchedule.dto';
+import { QueryScheduleDto } from './dto/querySchedule.dto';
 import { UpdateScheduleDto } from './dto/updateSchedule.dto';
+import { ScheduleEntity } from './entities/schedule.entity';
 
 @Injectable()
 export class ScheduleService implements BaseAbstractService<ScheduleEntity> {
@@ -90,7 +90,7 @@ export class ScheduleService implements BaseAbstractService<ScheduleEntity> {
     const open = openHour.split(':');
     const close = closeHour.split(':');
     if (open[0] > close[0] || (open[0] === close[0] && open[1] >= close[1]))
-      throw new BadRequestException(ErrorMsgEnum.TIME_FORMAT);
+      throw new BadRequestException(ErrorMsgEnum.INVALID_HOUR);
     return true;
   }
 

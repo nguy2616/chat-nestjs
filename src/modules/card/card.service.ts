@@ -45,25 +45,22 @@ export class CardService implements BaseAbstractService<CardEntity> {
   }
   async getList(query: QueryCardDto): Promise<TPaginationResult<CardEntity>> {
     const { limit, skip, sortBy, sortOrder, conditions } = mutateQuery(query);
-    try {
-      const data = await this.repository.findAndCount({
-        where: { ...conditions },
-        skip,
-        take: limit,
-        order: {
-          [sortBy]: sortOrder,
-        },
-      });
-      return {
-        data: data[0],
-        totalItems: data[1],
-        perPage: limit,
-        page: query.page,
-        totalPages: Math.ceil(data[1] / limit),
-      };
-    } catch (error: any) {
-      throw new BadRequestException(JSON.stringify(error?.message ?? error));
-    }
+
+    const data = await this.repository.findAndCount({
+      where: { ...conditions },
+      skip,
+      take: limit,
+      order: {
+        [sortBy]: sortOrder,
+      },
+    });
+    return {
+      data: data[0],
+      totalItems: data[1],
+      perPage: limit,
+      page: query.page,
+      totalPages: Math.ceil(data[1] / limit),
+    };
   }
   async getById(id: number): Promise<CardEntity> {
     try {
@@ -95,8 +92,8 @@ export class CardService implements BaseAbstractService<CardEntity> {
     dto: UpdateCardDto,
     em?: EntityManager | undefined,
   ): Promise<CardEntity> {
-    const bank = await this.getById(dto.id);
-    return await this.repository.save({ ...bank, ...dto });
+    const data = await this.getById(dto.id);
+    return await this.repository.save({ ...data, ...dto });
   }
   async delete(id: number): Promise<any> {
     try {

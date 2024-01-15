@@ -8,5 +8,6 @@ export enum ErrorMsgEnum {
   CREATE_FAIL = 'CREATE_FAIL',
   TIME_FORMAT = 'openTime must be in HH:MM format and in 30-minute intervals',
   NOT_PROVIDER = 'USER_IS_NOT_PROVIDER',
+  NOT_CUSTOMER = 'USER_IS_NOT_CUSTOMER',
   INVALID_HOUR = 'CLOSE_HOUR_MUST_BE_GREATER_THAN_OPEN_HOUR',
 }
