@@ -4,6 +4,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { RoleEntity } from './role.entity';
 import { BankEntity } from '../../bank/entities/bank.entity';
 import { CardEntity } from '../../card/entities/card.entity';
+import { ScheduleEntity } from '../../schedule/entities/schedule.entity';
 
 @Entity('users')
 export class UserEntity extends BaseAbstractEntity {
@@ -38,4 +39,9 @@ export class UserEntity extends BaseAbstractEntity {
     cascade: true,
   })
   cards: CardEntity[];
+
+  @OneToMany(() => ScheduleEntity, (schedules) => schedules.provider, {
+    cascade: true,
+  })
+  schedules: ScheduleEntity[];
 }

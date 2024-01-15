@@ -21,4 +21,9 @@ export class PaginationDto {
   @IsOptional()
   @IsString()
   sortOrder: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  actorId: number;
 }

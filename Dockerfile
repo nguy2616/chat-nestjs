@@ -1,17 +1,30 @@
-FROM node:20.10-alpine
+FROM node:20.10-alpine as builder
 
-WORKDIR /app
+ENV NODE_ENV build
 
-COPY package*.json ./
+USER node
 
-RUN yarn install
+WORKDIR /home/node
 
-COPY . .
+COPY  --chown=node:node package*.json ./
 
+RUN yarn && yarn add bcrypt
+
+COPY --chown=node:node . .
 RUN yarn build
 
-ENV NODE_ENV=development
+FROM node:20.10-alpine
 
-EXPOSE 4000
+# RUN apk add --no-cache tzdata bash openjdk11
 
-CMD ["node", "dist/main.js"]
+ENV NODE_ENV production
+
+USER node
+WORKDIR /home/node
+COPY --from=builder --chown=node:node /home/node/package*.json ./
+COPY --from=builder --chown=node:node /home/node/node_modules/ ./node_modules/
+COPY --from=builder --chown=node:node /home/node/dist/ ./dist/
+
+
+
+CMD ["node","dist/main.js"]

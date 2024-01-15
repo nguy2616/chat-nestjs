@@ -4,7 +4,6 @@ import { MenuEntity } from './menu.entity';
 import { CategoryEntity } from '../../category/entities/category.entity';
 
 @Entity('menus_categories')
-@Unique('unq_menuId_categoryId', ['menuId', 'categoryId'])
 export class MenuCategoryEntity extends BaseAbstractEntity {
   @Column({ name: 'menu_id', nullable: false })
   menuId: number;
